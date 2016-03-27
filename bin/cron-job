@@ -7,8 +7,8 @@ make_backup () {
 
     AWS_ACCESS_KEY_ID={{AWS_ACCESS_KEY_ID}}
     AWS_SECRET_ACCESS_KEY={{AWS_SECRET_ACCESS_KEY}}
+    AWS_DEFAULT_REGION={{AWS_DEFAULT_REGION}}
     BUCKET={{BUCKET}}
-    REGION={{REGION}}
     MYSQL_HOST={{MYSQL_HOST}}
     MYSQL_PORT={{MYSQL_PORT}}
     MYSQL_USER={{MYSQL_USER}}
@@ -16,7 +16,7 @@ make_backup () {
     MYSQL_DATABASE={{MYSQL_DATABASE}}
     FILE={{FILENAME}}-$DATETIME.sql.gz
 
-    mysqldump -h $MYSQL_HOST -P $MYSQL_PORT -u $MYSQL_USER -p$MYSQL_PASSWORD $MYSQL_DATABASE | gzip -9 -c | aws s3 cp - --region=$REGION s3://$BUCKET/$FILE
+    mysqldump -h $MYSQL_HOST -P $MYSQL_PORT -u $MYSQL_USER -p$MYSQL_PASSWORD $MYSQL_DATABASE | gzip -9 -c | aws s3 cp - s3://$BUCKET/$FILE
 
     # exit if last command have problems
     if  [ "$?" == "0" ]; then
@@ -29,7 +29,7 @@ make_backup () {
     fi
 
     # copies the freshly created backup to last.sql.gz
-    aws s3 cp --region=$REGION s3://$BUCKET/$FILE s3://$BUCKET/last.sql.gz
+    aws s3 cp s3://$BUCKET/$FILE s3://$BUCKET/last.sql.gz
 
     if  [ "$?" == "0" ]; then
         echo "`date`: Copied to last.sql.gz";
