@@ -1,22 +1,11 @@
 #!/bin/bash
 
 # docker cloud linked container environment variables
-export MYSQL_HOST=$MYSQL_PORT_3306_TCP_ADDR
-export MYSQL_PORT=$MYSQL_PORT_3306_TCP_PORT
-export MYSQL_USER=$MYSQL_ENV_MYSQL_USER
-export MYSQL_PASSWORD=$MYSQL_ENV_MYSQL_PASSWORD
-export MYSQL_DATABASE=$MYSQL_ENV_MYSQL_DATABASE
-
-sed 's,{{FILENAME}},'"${FILENAME}"',g' -i /backup/bin/cron-job
-sed 's,{{AWS_ACCESS_KEY_ID}},'"${AWS_ACCESS_KEY_ID}"',g' -i /backup/bin/cron-job
-sed 's,{{AWS_SECRET_ACCESS_KEY}},'"${AWS_SECRET_ACCESS_KEY}"',g' -i /backup/bin/cron-job
-sed 's,{{BUCKET}},'"${BUCKET}"',g' -i /backup/bin/cron-job
-sed 's,{{AWS_DEFAULT_REGION}},'"${AWS_DEFAULT_REGION}"',g' -i /backup/bin/cron-job
-sed 's,{{MYSQL_HOST}},'"${MYSQL_HOST}"',g' -i /backup/bin/cron-job
-sed 's,{{MYSQL_PORT}},'"${MYSQL_PORT}"',g' -i /backup/bin/cron-job
-sed 's,{{MYSQL_USER}},'"${MYSQL_USER}"',g' -i /backup/bin/cron-job
-sed 's,{{MYSQL_PASSWORD}},'"${MYSQL_PASSWORD}"',g' -i /backup/bin/cron-job
-sed 's,{{MYSQL_DATABASE}},'"${MYSQL_DATABASE}"',g' -i /backup/bin/cron-job
+MYSQL_HOST=${MYSQL_PORT_3306_TCP_ADDR:-$MYSQL_HOST}
+MYSQL_PORT=${MYSQL_PORT_3306_TCP_PORT:-$MYSQL_PORT}
+MYSQL_USER=${MYSQL_ENV_MYSQL_USER:-$MYSQL_USER}
+MYSQL_PASSWORD=${MYSQL_ENV_MYSQL_PASSWORD:-$MYSQL_PASSWORD}
+MYSQL_DATABASE=${MYSQL_ENV_MYSQL_DATABASE:-$MYSQL_DATABASE}
 
 touch /var/log/cron.log;
 
