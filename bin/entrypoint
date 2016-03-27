@@ -4,6 +4,23 @@ MYSQL_PORT=${MYSQL_PORT:-3306}
 FILENAME=${FILENAME:-backup}
 BACKUP_WINDOW=${BACKUP_WINDOW:-"0 6 * * * "}
 
+# docker cloud environment
+if [ -z "$MYSQL_PORT_3306_TCP_ADDR" ]; then
+    MYSQL_HOST=$MYSQL_PORT_3306_TCP_ADDR
+fi
+if [ -z "$MYSQL_PORT_3306_TCP_PORT" ]; then
+    MYSQL_PORT=$MYSQL_PORT_3306_TCP_PORT
+fi
+if [ -z "$MYSQL_ENV_MYSQL_USER" ]; then
+    MYSQL_USER=$MYSQL_ENV_MYSQL_USER
+fi
+if [ -z "$MYSQL_ENV_MYSQL_PASSWORD" ]; then
+    MYSQL_PASSWORD=$MYSQL_ENV_MYSQL_PASSWORD
+fi
+if [ -z "$MYSQL_ENV_MYSQL_DATABASE" ]; then
+    MYSQL_DATABASE=$MYSQL_ENV_MYSQL_DATABASE
+fi
+
 sed 's,{{FILENAME}},'"${FILENAME}"',g' -i /backup/bin/cron-job
 sed 's,{{AWS_ACCESS_KEY_ID}},'"${AWS_ACCESS_KEY_ID}"',g' -i /backup/bin/cron-job
 sed 's,{{AWS_SECRET_ACCESS_KEY}},'"${AWS_SECRET_ACCESS_KEY}"',g' -i /backup/bin/cron-job
@@ -13,6 +30,7 @@ sed 's,{{MYSQL_HOST}},'"${MYSQL_HOST}"',g' -i /backup/bin/cron-job
 sed 's,{{MYSQL_PORT}},'"${MYSQL_PORT}"',g' -i /backup/bin/cron-job
 sed 's,{{MYSQL_USER}},'"${MYSQL_USER}"',g' -i /backup/bin/cron-job
 sed 's,{{MYSQL_PASSWORD}},'"${MYSQL_PASSWORD}"',g' -i /backup/bin/cron-job
+sed 's,{{MYSQL_DATABASE}},'"${MYSQL_DATABASE}"',g' -i /backup/bin/cron-job
 
 touch /var/log/cron.log;
 
